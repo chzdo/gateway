@@ -1,0 +1,45 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  api:
+    host: localhost
+    paths: "/ip"
+  student:
+    host: localhost
+    paths: "/students"
+  userLogin:
+    host: localhost
+    paths: "/users/login"
+  users:
+    host: localhost
+    paths: "/users*"
+serviceEndpoints:
+  users:
+    url: "http://localhost:3001"
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - jwt
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  users:
+    apiEndpoints:
+      - users
+    policies:
+      - jwt:
+          action:
+            secretOrPublicKey: "the-secret-key"
+            checkCredentialExistence: false
+
+      - proxy:
+          action:
+            serviceEndpoint: users
+            changeOrigin: true
